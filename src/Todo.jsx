@@ -96,30 +96,7 @@ const Todo = ({mobile,darkMode,setDarkMode,actMode,setActMode}) =>{
                         <div className="addItem"
                         style={{color:txtCol}}
                         onClick={handleSubmit}>Add</div>
-                    </div>                    
-                    <div className="listCont">
-                        <InstantContext.Provider value={{darkMode,create,txtCol,
-                        text,setText,data,setData,setActData,setCompData,
-                        textDec,setTextDec,setCount,count}}>
-                        {   showAll && 
-                            data.map((items)=>{
-                                return <List {...items} key={items.id}/>
-                            })                            
-                        }
-                        {
-                            showActive &&
-                            actData.map((items)=>{
-                                return <List {...items} key={items.id}/>
-                            })
-                        }
-                        {
-                            showCompleted &&
-                            compData.map((items)=>{
-                                return <List {...items} key={items.id}/>
-                            })
-                        }
-                        </InstantContext.Provider>                                                
-                    </div>
+                    </div>                                        
                     {
                         mobile ?
                         <>
@@ -223,12 +200,31 @@ const Todo = ({mobile,darkMode,setDarkMode,actMode,setActMode}) =>{
                             </div>
                          </div>
                     }                    
-                    <div className="statement">
-                        <p style={{color:basetxt}}
-                        >Click the Add button to reorder list</p>
-                    </div>
-                </div>
+                </div>                
             </div>
+                <div className="listCont">
+                    <InstantContext.Provider value={{darkMode,create,txtCol,
+                    text,setText,data,setData,setActData,setCompData,
+                    textDec,setTextDec,setCount,count}}>
+                    {   showAll && 
+                        data.map((items)=>{
+                        return <List {...items} key={items.id}/>
+                        })                            
+                    }
+                    {
+                        showActive &&
+                        actData.map((items)=>{
+                            return <List {...items} key={items.id}/>
+                        })
+                    }
+                    {
+                        showCompleted &&
+                        compData.map((items)=>{
+                            return <List {...items} key={items.id}/>
+                        })
+                    }
+                    </InstantContext.Provider>                                                
+                </div>                                    
         </>
     )
 }
@@ -236,7 +232,8 @@ const Todo = ({mobile,darkMode,setDarkMode,actMode,setActMode}) =>{
 export default Todo;
 
 const List = ({text,id,active,completed}) =>{   
-    const instantData = useContext(InstantContext)            
+    const instantData = useContext(InstantContext)
+    const pickData = instantData.data.find((list)=>list.id===id)            
     const removeList = () =>{          
         instantData.setData((Data)=>{            
             return Data.filter((list)=>list.id!==id)
@@ -249,19 +246,23 @@ const List = ({text,id,active,completed}) =>{
         instantData.setCompData((Data)=>{            
             return Data.filter((list)=>list.id!==id)
         })
-        instantData.setCount(1);
-        instantData.actData.map((item)=>{            
-            instantData.setCount(instantData.count+1)
-            return null
-        })
+        if (pickData.completed===false){
+            instantData.setCount(instantData.count-1)
+        }        
     }    
     return(
         <>
         <div className="todoL" 
         style={{background:instantData.create}}
         >
+            <div className="remove"
+            onClick={removeList}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="#494C6B" fill-rule="evenodd" d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z"/></svg>    
+            </div>
+            <h1 style={{color:instantData.txtCol}}>{text}</h1>
             {
                 active ?                
+                    <div className="selectM">
                     <div className="select" onClick={()=>{ 
                         replaceItem(instantData.setData, {id: new Date().getTime().toString(),
                             text,active:false,completed:true},id)                                               
@@ -282,9 +283,12 @@ const List = ({text,id,active,completed}) =>{
                         })                                                                                                                        
                         }}>
                         <div className="inSelect"
-                        style={{background:instantData.create}}/>
+                        style={{background:instantData.create}}/>                        
                     </div>                    
+                    <p style={{color:instantData.txtCol}}>Mark as done!</p>
+                    </div>
                 :
+                    <div className="selectM">
                     <div className="select" onClick={()=>{
                         replaceItem(instantData.setData, {id: new Date().getTime().toString(),
                             text,active:true,completed:false},id)                                               
@@ -306,12 +310,9 @@ const List = ({text,id,active,completed}) =>{
                         }}>                       
                         <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9"><path fill="none" stroke="#FFF" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>                                                 
                     </div>
-            }           
-            <h1 style={{color:instantData.txtCol}}>{text}</h1>
-            <div className="remove"
-            onClick={removeList}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path fill="#494C6B" fill-rule="evenodd" d="M16.97 0l.708.707L9.546 8.84l8.132 8.132-.707.707-8.132-8.132-8.132 8.132L0 16.97l8.132-8.132L0 .707.707 0 8.84 8.132 16.971 0z"/></svg>    
-            </div>        
+                    <p style={{color:instantData.txtCol}}>Mark as done!</p>
+                    </div>
+            }                                           
         </div>        
         </>
     )
