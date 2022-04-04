@@ -14,7 +14,7 @@ const Todo = ({mobile,darkMode,setDarkMode,actMode,setActMode}) =>{
     const [txtCol, setTxtCol] = useState("hsl(0, 0%, 98%)");   
     const [basetxt, setBaseTxt] = useState("rgb(160,160,160)")  
     const [text, setText] = useState("");  
-    const [textDec,setTextDec] = useState("none")
+    const [textDec,setTextDec] = useState("none")    
     const [error, setError] = useState(false);
     const [errMessage, setErrMessage] = useState("");     
     useEffect(()=>{
@@ -29,7 +29,7 @@ const Todo = ({mobile,darkMode,setDarkMode,actMode,setActMode}) =>{
         else{
             setCreate("hsl(0, 0%, 98%)");
             setTxtCol("hsl(235, 24%, 19%)")     
-            setBaseTxt("rgb(160,160,160)")                                                               
+            setBaseTxt("rgb(160,160,160)")                                                                       
             setActData(data);  
             setActMode(false);                              
         }                      
@@ -202,7 +202,7 @@ const Todo = ({mobile,darkMode,setDarkMode,actMode,setActMode}) =>{
                     }                    
                 </div>                
             </div>
-                <div className="listCont">
+                <div className="listCont" >
                     <InstantContext.Provider value={{darkMode,create,txtCol,
                     text,setText,data,setData,setActData,setCompData,
                     textDec,setTextDec,setCount,count}}>
@@ -248,7 +248,16 @@ const List = ({text,id,active,completed}) =>{
         })
         if (pickData.completed===false){
             instantData.setCount(instantData.count-1)
-        }        
+        }                                                                 
+        instantData.setCompData((compData)=>{
+            return compData.filter((list)=>
+            list.completed===true)
+        })
+        instantData.setActData((actData)=>{
+            return actData.filter((list)=>
+            list.completed===false)
+        })
+        instantData.setCount(instantData.count+1)        
     }    
     return(
         <>
