@@ -246,18 +246,17 @@ const List = ({text,id,active,completed}) =>{
         instantData.setCompData((Data)=>{            
             return Data.filter((list)=>list.id!==id)
         })
+        instantData.setActData((actData)=>{
+            return actData.filter((list)=>
+            list.completed===false)
+        })
         if (pickData.completed===false){
             instantData.setCount(instantData.count-1)
         }                                                                 
         instantData.setCompData((compData)=>{
             return compData.filter((list)=>
             list.completed===true)
-        })
-        instantData.setActData((actData)=>{
-            return actData.filter((list)=>
-            list.completed===false)
-        })
-        instantData.setCount(instantData.count+1)        
+        })                
     }    
     return(
         <>
