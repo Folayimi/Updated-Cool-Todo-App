@@ -104,15 +104,14 @@ body{
 .createTodo .addItem:hover{
     cursor:pointer;
 }
-.listCont{       
-    position:absolute; 
+.listCont{           
+    margin-top:3em;
     width:100%;
     display: flex;    
     justify-content: center;  
     align-items: center;    
     border-radius: 0.2em;   
-    flex-wrap: wrap; 
-    top:42%;    
+    flex-wrap: wrap;         
 }
 .todoL{
     margin:0.5em;
